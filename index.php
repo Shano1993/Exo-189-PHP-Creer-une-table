@@ -61,7 +61,45 @@
 
 // TODO Votre code ici.
 
+$server = 'localhost';
+$db = 'table_test_php';
+$user = 'root';
+$password = '';
+
 try {
-    ...
+    $conn = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql1 = "
+        CREATE TABLE user (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            firstname VARCHAR(50) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            password VARCHAR(100) NOT NULL,
+            adress VARCHAR(255) NOT NULL,
+            postal_code VARCHAR(50) NOT NULL,
+            country VARCHAR(50) NOT NULL,
+            date_join DATETIME DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(email)
+        )
+    ";
+
+    $sql2 = "
+        CREATE TABLE product (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(70) NOT NULL,
+            price DOUBLE NOT NULL,
+            short_description VARCHAR(255) NOT NULL,
+            long_description TEXT NOT NULL
+        )
+    ";
+
+    $conn->exec($sql1);
+    $conn->exec($sql2);
 }
-catch...
+catch(PDOException $exception) {
+    echo "Erreur lors de la création de la table: " . $exception->getMessage();
+}
+
+$conn = null;
